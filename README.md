@@ -254,6 +254,11 @@ type \users\phoebe\desktop\user.txt
 ````
 <img width="1917" height="152" alt="image" src="https://github.com/user-attachments/assets/6e9320c1-64b8-4bf4-a5e6-3bec1d5ebc8d" />
 
+For enumeration we are going to use WinPEAS. Go to https://github.com/peass-ng/PEASS-ng and enter the WinPEAS folder:
+<img width="1060" height="796" alt="image" src="https://github.com/user-attachments/assets/0f9ee5a7-9ac7-48ff-8d77-4cad25f51f54" />
+
+There download winpeas.exe and move it into te same folder you have the python server running:
+
 
 
 
